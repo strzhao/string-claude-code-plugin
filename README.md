@@ -1,4 +1,4 @@
-# Claude Code Plugins Collection
+# Claude Code 插件集合
 
 <div align="center">
 
@@ -14,7 +14,7 @@
 
 ## 📖 项目简介
 
-本仓库收集了一系列高质量的 **Claude Code 插件**，旨在通过 AI 辅助提升开发效率和代码质量。
+本仓库是一个 **Claude Code 插件市场**，收集了一系列高质量的 Claude Code 插件，旨在通过 AI 辅助提升开发效率和代码质量。
 
 ### 🎯 设计理念
 
@@ -27,21 +27,31 @@
 
 ## 📦 插件列表
 
+### 🎯 article-summarizer (v1.0.0)
+**文章内容分析与结构化摘要生成工具**
+
+- **功能**：通过浏览器访问文章链接，提取内容并生成多层次结构化摘要，最后通过 flomo MCP 保存
+- **核心特性**：
+  - 使用 Playwright 无头浏览器提取网页内容
+  - 结构化摘要生成（核心思想、核心论点、关键信息、结论等）
+  - 支持 flomo 笔记保存，自动添加标签和来源
+  - 严格遵循原文内容，无个人解读
+- **技术栈**：Playwright MCP、flomo MCP
+- **作者**：stringzhao
+
 ---
 
 ## 🚀 快速开始
 
-### 方案一：插件市场安装
-https://g.hz.netease.com/cloudmusic-agi/plugins/vip-claude-code-plugin.git
-在 Claude Code 中执行，添加以下 git 仓库为插件市场来源
+### 方案一：插件市场安装（推荐）
 
-`/plugin marketplace add https://g.hz.netease.com/cloudmusic-agi/plugins/vip-claude-code-plugin.git`
+本仓库本身就是一个 Claude Code 插件市场。在 Claude Code 中执行以下命令添加为插件市场来源：
 
-![alt text](https://p6.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/77480383284/54b4/b5cb/d12e/cc0df2244d1c9730665b2d5cdb4400b0.png)
+```bash
+/plugin marketplace add https://g.hz.netease.com/cloudmusic-agi/plugins/vip-claude-code-plugin.git
+```
 
-
-安装完成后重启 claude code。
-
+安装完成后重启 Claude Code。
 
 ### 方案二：本地安装流程
 
@@ -49,7 +59,7 @@ https://g.hz.netease.com/cloudmusic-agi/plugins/vip-claude-code-plugin.git
 
 ```bash
 git clone <repository-url>
-cd vip-claude-code-plugin
+cd string-claude-code-plugin
 ```
 
 #### 2️⃣ 安装插件
@@ -58,7 +68,6 @@ cd vip-claude-code-plugin
 # 复制插件到 Claude Code 插件目录
 cp -r plugins/article-summarizer ~/.claude/plugins/
 ```
-
 
 #### 3️⃣ 重启 Claude Code
 
@@ -69,24 +78,67 @@ cp -r plugins/article-summarizer ~/.claude/plugins/
 ## 📂 项目结构
 
 ```
-vip-claude-code-plugin/
+string-claude-code-plugin/
 ├── README.md                           # 本文档
-├── .gitignore                          # Git 忽略规则
-│
+├── .claude-plugin/                     # 插件市场配置
+│   └── marketplace.json               # 插件市场元数据
+├── document/                           # 文档资料
+│   └── skill_best_practices.md        # Skill 开发最佳实践
 └── plugins/                            # 插件目录
     └── article-summarizer/             # 文章摘要生成器
         ├── .claude-plugin/             # 插件配置目录
-        │   └── plugin.json             # 插件元数据
+        │   └── plugin.json            # 插件元数据
+        ├── .mcp.json                  # MCP 服务器配置
         └── skills/                     # Skill 技能
             └── article-summarizer/
-                ├── SKILL.md            # AI 行为指南
-                ├── assets/             # 模板资源
+                ├── SKILL.md           # AI 行为指南
+                ├── assets/            # 模板资源
                 │   └── summary_template.md  # 摘要模板
-                ├── references/         # 参考指南
+                ├── references/        # 参考指南
                 │   └── content_extraction_guidelines.md  # 内容提取指南
-                └── scripts/            # 辅助工具
+                └── scripts/           # 辅助工具
                     └── content_extractor.py  # 内容提取器
 ```
+
+---
+
+## 🔧 插件开发指南
+
+### 插件结构规范
+
+每个插件应遵循以下结构：
+
+```
+plugin-name/
+├── .claude-plugin/
+│   └── plugin.json                    # 插件元数据
+├── .mcp.json                          # MCP 服务器配置（可选）
+├── skills/
+│   └── skill-name/
+│       ├── SKILL.md                   # AI 行为指南
+│       ├── assets/                    # 模板资源
+│       ├── references/                # 参考指南
+│       └── scripts/                   # 辅助工具
+└── README.md                          # 插件文档
+```
+
+### plugin.json 示例
+
+```json
+{
+    "name": "plugin-name",
+    "version": "1.0.0",
+    "description": "插件功能描述",
+    "author": {
+        "name": "作者名",
+        "email": "作者邮箱"
+    },
+    "license": "MIT",
+    "keywords": ["关键词1", "关键词2"]
+}
+```
+
+---
 
 ## 🤝 贡献指南
 
@@ -119,3 +171,24 @@ vip-claude-code-plugin/
 - [ ] 在本地 Claude Code 中测试通过
 - [ ] 文档准确无误
 - [ ] 遵循项目的目录结构规范
+
+---
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
+
+---
+
+## 📞 联系方式
+
+- **项目维护者**：String Zhao
+- **邮箱**：zhaoguixiong@corp.netease.com
+- **仓库地址**：https://g.hz.netease.com/cloudmusic-agi/plugins/vip-claude-code-plugin.git
+
+---
+
+## 🙏 致谢
+
+感谢所有贡献者和用户的支持！特别感谢 Claude Code 团队提供的优秀平台。
+
