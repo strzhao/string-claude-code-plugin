@@ -1,0 +1,11 @@
+{
+    "name": "article-summarizer",
+    "version": "1.0.0",
+    "description": "文章内容分析与结构化摘要生成工具",
+    "author": {
+        "name": "stringzhao",
+        "email": ""
+    },
+    "license": "MIT",
+    "keywords": ["article", "summary", "analysis", "content", "flomo"]
+}

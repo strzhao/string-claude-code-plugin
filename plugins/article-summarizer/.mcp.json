@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "flomo-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@chatmcp/flomo-mcp"
+      ],
+      "env": {
+        "FLOMO_API_URL": "https://flomoapp.com/iwh/MTgzNTkzNA/05f33b8602fa108b9dd0422e711c11b3/"
+      }
+    }
+  }
+}
