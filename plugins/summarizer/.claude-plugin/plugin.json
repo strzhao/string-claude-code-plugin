@@ -1,10 +1,10 @@
 {
-    "name": "article-summarizer",
+    "name": "summarizer",
     "version": "1.0.0",
     "description": "文章内容分析与结构化摘要生成工具",
     "author": {
         "name": "stringzhao",
-        "email": ""
+        "email": "zhaoguixiong@corp.netease.com"
     },
     "license": "MIT",
     "keywords": ["article", "summary", "analysis", "content", "flomo"]

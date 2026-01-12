@@ -1,5 +1,5 @@
 ---
-name: article-summarizer
+name: summarizer
 description: 文章内容分析与结构化摘要生成工具。通过浏览器访问文章链接，提取内容并生成多层次结构化摘要，最后通过flomo MCP保存。
 ---
 

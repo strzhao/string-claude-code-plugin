@@ -6,8 +6,8 @@
     },
     "plugins": [
         {
-            "name": "article-summarizer",
-            "source": "./plugins/article-summarizer",
+            "name": "summarizer",
+            "source": "./plugins/summarizer",
             "description": "文章内容分析与结构化摘要生成工具",
             "version": "1.0.0",
             "author": {
