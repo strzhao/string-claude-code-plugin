@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**会员业务私域 Claude Code 插件集合**
+**String Claude Code 插件集合**
 
 [![Plugins](https://img.shields.io/badge/plugins-1-blue.svg)]()
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
@@ -27,7 +27,7 @@
 
 ## 📦 插件列表
 
-### 🎯 article-summarizer (v1.0.0)
+### 🎯 summarizer (v1.0.0)
 **文章内容分析与结构化摘要生成工具**
 
 - **功能**：通过浏览器访问文章链接，提取内容并生成多层次结构化摘要，最后通过 flomo MCP 保存
@@ -37,7 +37,7 @@
   - 支持 flomo 笔记保存，自动添加标签和来源
   - 严格遵循原文内容，无个人解读
 - **技术栈**：Playwright MCP、flomo MCP
-- **作者**：stringzhao
+- **作者**：String Zhao
 
 ---
 
@@ -66,7 +66,7 @@ cd string-claude-code-plugin
 
 ```bash
 # 复制插件到 Claude Code 插件目录
-cp -r plugins/article-summarizer ~/.claude/plugins/
+cp -r plugins/summarizer ~/.claude/plugins/
 ```
 
 #### 3️⃣ 重启 Claude Code
@@ -85,12 +85,12 @@ string-claude-code-plugin/
 ├── document/                           # 文档资料
 │   └── skill_best_practices.md        # Skill 开发最佳实践
 └── plugins/                            # 插件目录
-    └── article-summarizer/             # 文章摘要生成器
+    └── summarizer/                     # 文章摘要生成器
         ├── .claude-plugin/             # 插件配置目录
         │   └── plugin.json            # 插件元数据
         ├── .mcp.json                  # MCP 服务器配置
         └── skills/                     # Skill 技能
-            └── article-summarizer/
+            └── summarizer/
                 ├── SKILL.md           # AI 行为指南
                 ├── assets/            # 模板资源
                 │   └── summary_template.md  # 摘要模板
