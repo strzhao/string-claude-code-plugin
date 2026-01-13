@@ -6,6 +6,12 @@
         "@playwright/mcp@latest"
       ]
     },
+    "video-to-text-mcp": {
+      "command": "npx",
+      "args": [
+        "video-to-text-mcp"
+      ]
+    },
     "flomo-mcp": {
       "command": "npx",
       "args": [
