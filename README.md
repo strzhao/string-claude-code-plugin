@@ -28,15 +28,15 @@
 ## 📦 插件列表
 
 ### 🎯 summarizer (v1.0.0)
-**文章内容分析与结构化摘要生成工具**
+**多模态内容摘要工具**
 
-- **功能**：通过浏览器访问文章链接，提取内容并生成多层次结构化摘要，最后通过 flomo MCP 保存
+- **功能**：自动识别文章、视频、音频链接，提取内容并生成多层次结构化摘要，最后通过 flomo MCP 保存
 - **核心特性**：
-  - 使用 Playwright 无头浏览器提取网页内容
+  - 使用 Playwright 无头浏览器提取网页内容，Video-to-Text MCP处理视频/音频转文字
   - 结构化摘要生成（核心思想、核心论点、关键信息、结论等）
   - 支持 flomo 笔记保存，自动添加标签和来源
   - 严格遵循原文内容，无个人解读
-- **技术栈**：Playwright MCP、flomo MCP
+- **技术栈**：Playwright MCP、Video-to-Text MCP、flomo MCP
 - **作者**：String Zhao
 
 ---
@@ -85,7 +85,7 @@ string-claude-code-plugin/
 ├── document/                           # 文档资料
 │   └── skill_best_practices.md        # Skill 开发最佳实践
 └── plugins/                            # 插件目录
-    └── summarizer/                     # 文章摘要生成器
+    └── summarizer/                     # 多模态内容摘要工具
         ├── .claude-plugin/             # 插件配置目录
         │   └── plugin.json            # 插件元数据
         ├── .mcp.json                  # MCP 服务器配置
