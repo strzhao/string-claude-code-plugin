@@ -10,7 +10,10 @@
       "command": "npx",
       "args": [
         "video-to-text-mcp"
-      ]
+      ],
+      "env": {
+        "WHISPER_MODEL": "large"  
+      }
     },
     "flomo-mcp": {
       "command": "npx",
