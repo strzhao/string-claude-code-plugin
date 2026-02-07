@@ -4,7 +4,7 @@
 
 **String Claude Code 插件集合**
 
-[![Plugins](https://img.shields.io/badge/plugins-1-blue.svg)]()
+[![Plugins](https://img.shields.io/badge/plugins-2-blue.svg)]()
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
@@ -37,6 +37,18 @@
   - 支持 flomo 笔记保存，自动添加标签和来源
   - 严格遵循原文内容，无个人解读
 - **技术栈**：Playwright MCP、Video-to-Text MCP、flomo MCP
+- **作者**：String Zhao
+
+### 🔔 task-notifier (v1.0.0)
+**任务完成提示音插件**
+
+- **功能**：在 Claude Code 任务执行完成后播放系统提示音提醒用户
+- **核心特性**：
+  - 任务完成自动通知（支持 Task、TodoWrite、TaskComplete、TaskUpdate 等工具）
+  - 跨平台支持（macOS、Linux、Windows）
+  - 使用系统原生通知，零配置
+  - 10秒超时保护，防止阻塞
+- **技术栈**：Hooks、系统通知、Shell 脚本
 - **作者**：String Zhao
 
 ---

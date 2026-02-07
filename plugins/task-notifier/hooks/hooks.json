@@ -1,0 +1,27 @@
+{
+    "description": "智能通知配置 - 在需要用户介入时播放声音",
+    "hooks": {
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "${CLAUDE_PLUGIN_ROOT}/assets/scripts/play-sound.sh stop",
+                        "timeout": 10
+                    }
+                ]
+            }
+        ],
+        "PermissionRequest": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "${CLAUDE_PLUGIN_ROOT}/assets/scripts/play-sound.sh permission",
+                        "timeout": 10
+                    }
+                ]
+            }
+        ]
+    }
+}

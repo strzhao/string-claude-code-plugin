@@ -14,6 +14,16 @@
                 "name": "stringzhao",
                 "email": "zhaoguixiong@corp.netease.com"
             }
+        },
+        {
+            "name": "task-notifier",
+            "source": "./plugins/task-notifier",
+            "description": "任务完成提示音插件。在 Claude Code 任务执行完成后播放提示音提醒用户。",
+            "version": "1.0.0",
+            "author": {
+                "name": "stringzhao",
+                "email": "zhaoguixiong@corp.netease.com"
+            }
         }
     ]
 }
