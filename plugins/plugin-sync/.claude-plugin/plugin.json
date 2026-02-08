@@ -1,0 +1,11 @@
+{
+    "name": "plugin-sync",
+    "version": "1.0.0",
+    "description": "Claude Code 插件跨模型同步工具。自动在切换模型时同步插件状态，解决 cc switch 导致的插件丢失问题。",
+    "author": {
+        "name": "stringzhao",
+        "email": "zhaoguixiong@corp.netease.com"
+    },
+    "license": "MIT",
+    "keywords": ["sync", "plugin", "model", "switch", "cross-model"]
+}
