@@ -4,7 +4,7 @@
 
 **String Claude Code 插件集合**
 
-[![Plugins](https://img.shields.io/badge/plugins-2-blue.svg)]()
+[![Plugins](https://img.shields.io/badge/plugins-3-blue.svg)]()
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
@@ -49,6 +49,19 @@
   - 使用系统原生通知，零配置
   - 10秒超时保护，防止阻塞
 - **技术栈**：Hooks、系统通知、Shell 脚本
+- **作者**：String Zhao
+
+### 🛠️ git-tools (v1.0.0)
+**智能 Git 提交工具**
+
+- **功能**：自动检测 React 代码改动，应用最佳实践优化，生成高质量的提交信息
+- **核心特性**：
+  - 智能 React 代码检测（无硬编码规则，基于代码特征分析）
+  - 自动化优化流程（React 最佳实践 + 代码简化）
+  - 高质量提交信息生成（约定式提交规范）
+  - 完整的工作流控制（从分析到提交）
+  - 安全可靠（预览确认机制，防止意外修改）
+- **技术栈**：Git、Skill 调用、代码分析
 - **作者**：String Zhao
 
 ---

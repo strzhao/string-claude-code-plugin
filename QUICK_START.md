@@ -10,6 +10,7 @@
 |--------|------|------|
 | `summarizer` | v1.0.0 | 多模态内容摘要工具，自动提取文章/视频/音频内容并生成结构化摘要 |
 | `task-notifier` | v1.0.0 | 任务完成提示音插件，在任务完成后播放系统通知 |
+| `git-tools` | v1.0.0 | 智能 Git 提交工具，自动检测 React 代码改动，应用最佳实践优化 |
 
 ## 快速安装
 
@@ -77,6 +78,37 @@ TaskComplete
 ```
 应该看到 `task-notifier` 相关的 hook 配置。
 
+---
+
+### 🛠️ git-tools - 智能 Git 提交
+
+自动检测 React 代码改动，应用最佳实践优化，生成高质量提交信息。
+
+**使用方法：**
+```bash
+# 执行智能 Git 提交
+/git-commit
+```
+
+**工作流程：**
+1. 分析 Git 状态，确认有可提交的更改
+2. 智能检测 React 代码（无硬编码规则）
+3. 如有 React 代码，应用 React 最佳实践优化
+4. 应用代码简化优化
+5. 总结修改内容
+6. 生成高质量提交信息并执行提交
+
+**依赖要求：**
+- Git 命令行工具
+- react best practice skill（已存在）
+- code simple skill（已存在）
+
+**验证安装：**
+```bash
+/skills
+```
+应该看到 `git-tools` skill。
+
 ## 项目结构
 
 ```
@@ -90,7 +122,8 @@ string-claude-code-plugin/
 │   └── skill_best_practices.md # Skill 开发最佳实践
 └── plugins/
     ├── summarizer/             # 内容摘要插件
-    └── task-notifier/          # 任务提示音插件
+    ├── task-notifier/          # 任务提示音插件
+    └── git-tools/              # 智能 Git 提交工具
 ```
 
 ## 插件开发
