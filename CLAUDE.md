@@ -200,24 +200,23 @@
 - 使用标准 POSIX 命令
 - 提供降级方案（如 notify-send 不存在时回退到终端响铃）
 
-### 5. writer-blog-skill (v1.3.0)
+### 5. writer-skill (v1.4.0)
 **类型**: Skill 插件
-**功能**: 写作风格 Skill（博客向）
+**功能**: 写作技能包（博客向 + 通用向）
 
-**核心能力**:
-- 让 AI 产出有个人味道的科技文章
-- 叙事驱动、口语化、类比落地的写作风格
-- 包含禁止清单和格式规范
+**包含 Skill**:
+- `writer-blog-skill`：科技博客向，叙事驱动、口语化、类比落地
+- `writer-general-skill`：通用写作向（开发中）
 
 **使用方式**:
-安装插件后，在写作场景中 AI 自动加载写作风格 Skill。
+安装插件后，根据场景调用 `/writer-blog-skill` 或 `/writer-general-skill`。
 
 ---
 
 ## 更新日志
 
 ### 2026-03-01
-- 将 writer-skill 重命名为 writer-blog-skill (v1.3.0)，为后续 writer-general-skill 做准备
+- 重组 writer-skill 为写作技能包 (v1.4.0)，统一容纳 writer-blog-skill 和 writer-general-skill
 
 ### 2026-02-08
 - 添加 plugin-sync 插件，解决跨模型插件同步问题
