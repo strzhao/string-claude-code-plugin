@@ -216,16 +216,17 @@
 - 使用标准 POSIX 命令
 - 提供降级方案（如 notify-send 不存在时回退到终端响铃）
 
-### 5. writer-skill (v1.4.0)
+### 5. writer-skill (v1.6.0)
 **类型**: Skill 插件
-**功能**: 写作技能包（博客向 + 通用向）
+**功能**: 写作技能包（博客向 + 通用向 + 技术文档向）
 
 **包含 Skill**:
 - `writer-blog-skill`：科技博客向，叙事驱动、口语化、类比落地
-- `writer-general-skill`：通用写作向（开发中）
+- `writer-general-skill`：通用写作向，适配评论、分析、访谈整理等多种场景
+- `writer-tech-skill`：技术文档向，面向 RFC/Design Doc，语气精确、克制、直接
 
 **使用方式**:
-安装插件后，根据场景调用 `/writer-blog-skill` 或 `/writer-general-skill`。
+安装插件后，根据场景调用 `/writer-blog-skill`、`/writer-general-skill` 或 `/writer-tech-skill`。
 
 ---
 
@@ -234,6 +235,7 @@
 ### 2026-03-01
 - git-tools 升级至 v1.3.0：新增提交前 CLAUDE.md 智能更新步骤、版本自动升级步骤
 - 重组 writer-skill 为写作技能包 (v1.4.0)，统一容纳 writer-blog-skill 和 writer-general-skill
+- writer-skill 升级至 v1.6.0：新增 writer-tech-skill，专注 RFC/Design Doc 工程规范型文档写作
 
 ### 2026-02-08
 - 添加 plugin-sync 插件，解决跨模型插件同步问题
