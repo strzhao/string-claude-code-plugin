@@ -48,7 +48,7 @@
 
 ---
 
-### 3. git-tools (v1.3.0)
+### 3. git-tools (v1.5.0)
 **类型**: Skill 插件
 **功能**: 智能 Git 提交工具
 
@@ -57,10 +57,11 @@
 - 提交前代码理解测验，避免 AI 代码让开发者脱节
 - 提交前智能更新 CLAUDE.md，保持文档与代码同步
 - 自动识别任务完成并升级版本号（语义化版本）
+- 提交后自动通过 ai-todo 同步任务进度，并支持通过 `ai-todo --help` 发现实时命令
 - 生成高质量中文提交信息（业务描述 + 技术说明）
 
 **使用方式**:
-运行 `/git-tools` 或告知 AI 需要 git commit。
+运行 `/git-commit` 触发完整工作流。
 
 ---
 
@@ -102,10 +103,13 @@
 │   ├── git-tools/                # Git 提交工具
 │   │   ├── .claude-plugin/
 │   │   └── skills/
-│   └── plugin-sync/              # 跨模型插件同步工具
+│   ├── plugin-sync/              # 跨模型插件同步工具
 │       ├── .claude-plugin/
 │       ├── hooks/
 │       └── assets/
+│   └── writer-skill/             # 写作技能包
+│       ├── .claude-plugin/
+│       └── skills/
 ├── README.md                     # 用户文档
 ├── QUICK_START.md               # 快速开始指南
 └── CLAUDE.md                    # 本文件
