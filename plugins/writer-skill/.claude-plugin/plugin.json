@@ -1,6 +1,6 @@
 {
     "name": "writer-skill",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "description": "写作技能包。包含博客向、通用向、技术文档向三种写作风格。",
     "author": {
         "name": "stringzhao",
