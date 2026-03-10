@@ -1,6 +1,6 @@
 # Git Tools 插件
 
-智能 Git 提交工具。自动检测 React 代码改动，应用最佳实践优化，生成高质量的提交信息。
+智能 Git 工具集。包含智能提交和本地拟真测试验证两个 Skill。
 
 ## 功能特性
 
@@ -12,6 +12,7 @@
 - 🎯 **用户友好**：清晰的进度反馈和交互确认
 - 🧠 **代码理解测验**：提交前智能出题，确保开发者理解 AI 生成的代码
 - 📋 **任务同步**：提交后自动同步进度到 ai-todo 任务管理（可选，需安装 ai-todo-cli）
+- 🧪 **本地拟真测试**：智能分析改动，自动选择验证策略，生成结构化验证报告
 
 ## 核心功能
 
@@ -155,10 +156,13 @@ git-tools/
 ├── .claude-plugin/
 │   └── plugin.json                    # 插件元数据
 ├── skills/
-│   └── git-tools/
-│       └── SKILL.md                   # 核心技能文件
+│   ├── git-tools/
+│   │   └── SKILL.md                   # 智能提交技能
+│   └── local-test/
+│       └── SKILL.md                   # 本地拟真测试验证技能
 ├── commands/
-│   └── git-commit.md                  # git-commit 命令定义
+│   ├── git-commit.md                  # git-commit 命令定义
+│   └── local-test.md                  # local-test 命令定义
 └── README.md                          # 本文档
 ```
 
@@ -205,6 +209,12 @@ git-tools/
 - 项目地址：https://github.com/stringzhao/string-claude-code-plugin
 
 ## 更新日志
+
+### v1.6.0 (2026-03-10)
+- 新增 local-test skill：本地拟真测试验证工具
+- 智能分析代码改动，自动决定验证策略（类型检查/lint/单测/构建/服务启动等）
+- 生成结构化验证报告，支持通过/警告/失败三级结论
+- 使用 `/local-test` 命令触发
 
 ### v1.3.0 (2026-03-06)
 - 新增任务同步功能：提交后自动通过 ai-todo-cli 同步任务进度
