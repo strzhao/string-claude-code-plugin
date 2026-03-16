@@ -91,6 +91,25 @@
 
 ---
 
+### 7. dev-loop (v1.0.0)
+**类型**: Skill + Hook 插件
+**功能**: AI 驱动的 DevOps 闭环
+
+**核心能力**:
+- 从目标描述到代码合并的全程自动化
+- 阶段状态机驱动：design → implement → qa → auto-fix → merge
+- 仅在两个审批门需要人工介入（设计审批 + 验收审批）
+- 四层 QA 检查 + 自动修复循环（最多 3 次重试）
+- 完整可追溯：状态文件保留目标、设计、QA 报告、变更日志
+- 与 git-tools、local-test、worktree-setup 组合使用
+
+**使用方式**:
+- 运行 `/dev-loop <目标描述>` 启动闭环
+- `/dev-loop approve` 批准审批门
+- `/dev-loop revise <反馈>` 要求修改
+
+---
+
 ## 项目结构
 
 ```
@@ -120,6 +139,11 @@
 │       ├── .claude-plugin/
 │       └── skills/
 │   └── worktree-setup/           # Git Worktree 自动初始化插件
+│       ├── .claude-plugin/
+│       ├── hooks/
+│       ├── scripts/
+│       └── skills/
+│   └── dev-loop/                 # AI DevOps 闭环插件
 │       ├── .claude-plugin/
 │       ├── hooks/
 │       ├── scripts/

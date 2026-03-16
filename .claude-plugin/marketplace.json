@@ -64,6 +64,16 @@
                 "name": "stringzhao",
                 "email": "zhaoguixiong@corp.netease.com"
             }
+        },
+        {
+            "name": "dev-loop",
+            "source": "./plugins/dev-loop",
+            "description": "AI 驱动的 DevOps 闭环。从目标描述到代码合并，全程自动化，仅在设计审批和验收审批两个关键点需要人工介入",
+            "version": "1.0.0",
+            "author": {
+                "name": "stringzhao",
+                "email": "zhaoguixiong@corp.netease.com"
+            }
         }
     ]
 }
