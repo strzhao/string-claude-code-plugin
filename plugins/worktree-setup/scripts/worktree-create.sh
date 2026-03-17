@@ -11,8 +11,20 @@ WORKTREE_PATH="$REPO_ROOT/.claude/worktrees/$NAME"
 BRANCH="worktree-$NAME"
 
 echo "→ 创建 worktree: $NAME (分支: $BRANCH)" >&2
-git fetch origin main >&2
-git worktree add "$WORKTREE_PATH" -b "$BRANCH" origin/main >&2
+
+# 自动检测默认分支（main/master/...），fallback 到当前 HEAD
+DEFAULT_BRANCH=""
+if git remote show origin &>/dev/null; then
+    DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
+    if [[ -n "$DEFAULT_BRANCH" ]]; then
+        git fetch origin "$DEFAULT_BRANCH" >&2
+        git worktree add "$WORKTREE_PATH" -b "$BRANCH" "origin/$DEFAULT_BRANCH" >&2
+    fi
+fi
+if [[ -z "$DEFAULT_BRANCH" ]]; then
+    echo "→ 无 origin remote 或无法检测默认分支，基于当前 HEAD 创建" >&2
+    git worktree add "$WORKTREE_PATH" -b "$BRANCH" HEAD >&2
+fi
 
 # 符号链接 + 依赖安装（共用 repair 脚本）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
