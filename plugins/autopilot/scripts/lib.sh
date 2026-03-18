@@ -3,7 +3,8 @@
 # autopilot 共享函数库
 # setup.sh 和 stop-hook.sh 共用的 frontmatter 操作工具
 
-STATE_FILE=".claude/autopilot.local.md"
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+STATE_FILE="${PROJECT_ROOT}/.claude/autopilot.local.md"
 
 parse_frontmatter() {
     [[ ! -f "$STATE_FILE" ]] && { echo ""; return; }

@@ -48,7 +48,7 @@
 
 ---
 
-### 3. autopilot (v2.2.0)
+### 3. autopilot (v2.3.0)
 **类型**: Skill + Hook 插件
 **功能**: AI 自动驾驶工程套件（全流程闭环 + 智能提交）
 
@@ -277,6 +277,11 @@
 ## 更新日志
 
 ### 2026-03-18
+- autopilot 升级至 v2.3.0：优化 git worktree 适配性
+  - `lib.sh` 使用 `git rev-parse --show-toplevel` 计算绝对 PROJECT_ROOT，STATE_FILE 改为绝对路径
+  - `setup.sh` 启动信息增加 worktree 检测和状态文件路径提示
+  - `stop-hook.sh` prompt 引用改用 $STATE_FILE 变量
+  - SKILL.md 增加 worktree 隔离语义说明
 - autopilot 升级至 v2.2.0：注入「假设需要证据」原则
   - 新增核心铁律第 7 条：对外部系统行为的假设必须通过运行时验证确认
   - Bugfix 验证重写为双模式：自动化测试 + 运行时验证，无测试框架不再跳过

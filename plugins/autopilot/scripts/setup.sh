@@ -213,7 +213,7 @@ if [[ -z "$GOAL" ]]; then
 fi
 
 # 创建状态文件
-mkdir -p .claude
+mkdir -p "$PROJECT_ROOT/.claude"
 
 cat > "$STATE_FILE" <<EOF
 ---
@@ -248,12 +248,18 @@ $GOAL
 EOF
 
 # 输出信息
+IS_WORKTREE=""
+if [[ -f "$PROJECT_ROOT/.git" ]]; then
+    IS_WORKTREE="(worktree: $(basename "$PROJECT_ROOT"))"
+fi
+
 cat <<EOF
 🔄 autopilot 已启动！
 
 目标: $GOAL
 最大迭代: $MAX_ITERATIONS
 最大重试: $MAX_RETRIES
+状态文件: $STATE_FILE ${IS_WORKTREE}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   阶段流程: design → 审批 → implement → qa → 审批 → merge
@@ -272,4 +278,4 @@ cat <<EOF
 EOF
 
 echo ""
-echo "开始设计阶段。请按照 autopilot skill 的指引，读取 .claude/autopilot.local.md 状态文件并执行 design 阶段。"
+echo "开始设计阶段。请按照 autopilot skill 的指引，读取 $STATE_FILE 状态文件并执行 design 阶段。"
