@@ -48,7 +48,7 @@
 
 ---
 
-### 3. autopilot (v2.6.0)
+### 3. autopilot (v2.6.1)
 **类型**: Skill + Hook 插件
 **功能**: AI 自动驾驶工程套件（全流程闭环 + 智能提交 + 工程诊断）
 
@@ -281,6 +281,10 @@
 ## 更新日志
 
 ### 2026-03-20
+- autopilot 升级至 v2.6.1：修复 worktree 场景下状态文件找不到的问题
+  - lib.sh: PROJECT_ROOT/STATE_FILE 改为延迟初始化函数 `init_paths()`，支持传入 cwd 参数
+  - stop-hook.sh: 从 stdin JSON 提取 `cwd` 字段后再初始化路径，解决 hook CWD 不可靠的时序问题
+  - setup.sh: 显式调用 `init_paths`，行为更加健壮
 - autopilot 升级至 v2.6.0：新增知识工程复合能力
   - design 阶段：进入 Plan Mode 前自动加载 `.claude/knowledge/` 中的历史决策和模式
   - merge 阶段：反馈驱动提取本次工作中的设计决策和调试教训，追加到知识文件

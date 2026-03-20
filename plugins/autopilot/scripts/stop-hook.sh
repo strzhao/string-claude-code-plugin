@@ -18,14 +18,21 @@ trap 'exit 0' ERR
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 
-# ── 0. 快速退出：状态文件不存在时直接放行，避免读 stdin 阻塞 ──
+# ── 0. 先读 stdin，提取 cwd 后再初始化路径 ──
+# Stop hook 的 stdin JSON 包含 cwd 字段，是 Claude Code 的实际工作目录。
+# 在 worktree 场景下 hook 脚本的 shell CWD 可能不是项目目录，
+# 必须用 stdin 中的 cwd 来正确定位状态文件。
 
+HOOK_INPUT=$(timeout 5 cat 2>/dev/null || true)
+HOOK_CWD=$(echo "$HOOK_INPUT" | jq -r '.cwd // ""' 2>/dev/null || true)
+
+# 用 stdin 的 cwd 初始化路径（为空时 fallback 到当前 CWD）
+init_paths "$HOOK_CWD"
+
+# 状态文件不存在时直接放行
 if [[ ! -f "$STATE_FILE" ]]; then
     exit 0
 fi
-
-# 读取 hook 输入（带超时保护，防止 stdin 未关闭导致挂起）
-HOOK_INPUT=$(timeout 5 cat 2>/dev/null || true)
 
 # ── 2. 解析 frontmatter ──
 

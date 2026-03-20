@@ -2,9 +2,21 @@
 
 # autopilot 共享函数库
 # setup.sh 和 stop-hook.sh 共用的 frontmatter 操作工具
+#
+# 使用方式：source lib.sh 后调用 init_paths [cwd]
+# cwd 可选，传入时会 cd 到该目录再解析路径（解决 worktree 场景下 hook CWD 不可靠问题）
 
-PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-STATE_FILE="${PROJECT_ROOT}/.claude/autopilot.local.md"
+PROJECT_ROOT=""
+STATE_FILE=""
+
+init_paths() {
+    local target_cwd="${1:-}"
+    if [[ -n "$target_cwd" ]] && [[ -d "$target_cwd" ]]; then
+        cd "$target_cwd"
+    fi
+    PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+    STATE_FILE="${PROJECT_ROOT}/.claude/autopilot.local.md"
+}
 
 parse_frontmatter() {
     [[ ! -f "$STATE_FILE" ]] && { echo ""; return; }

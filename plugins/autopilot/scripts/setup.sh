@@ -14,6 +14,7 @@
 set -euo pipefail
 
 source "$(dirname "$0")/lib.sh"
+init_paths
 
 # ── 子命令路由 ──────────────────────────────────────────────
 
