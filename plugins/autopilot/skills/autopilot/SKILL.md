@@ -405,7 +405,23 @@ autopilot-commit 完成后，回顾本次全流程产出，提取值得持久化
 ## 状态文件更新规范
 
 ### frontmatter 更新
-使用 Edit 工具精确修改 frontmatter 中的字段值。不要重写整个文件。
+
+**⚠️ 绝对不要用 Write 工具重写整个状态文件。** 必须使用 Edit 工具精确修改 frontmatter 中的字段值。重写会丢失 stop-hook 必需的字段（`iteration`、`max_iterations`、`session_id`），导致 stop-hook 误判文件损坏并删除。
+
+状态文件的完整 frontmatter 字段（由 setup.sh 创建，AI 不应增删字段）：
+```yaml
+---
+active: true
+phase: "design"          # AI 更新：design → implement → qa → auto-fix → merge → done
+gate: ""                 # AI 更新：设置审批门或清空
+iteration: 1             # stop-hook 管理：每次循环自动递增，AI 不要修改
+max_iterations: 30       # setup.sh 创建，AI 不要修改
+max_retries: 3           # setup.sh 创建，AI 不要修改
+retry_count: 0           # AI 更新：auto-fix 阶段递增
+session_id: "..."        # setup.sh 创建，AI 不要修改
+started_at: "..."        # setup.sh 创建，AI 不要修改
+---
+```
 
 示例：将 phase 从 design 改为 implement：
 ```

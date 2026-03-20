@@ -49,18 +49,29 @@ if [[ -n "$STATE_SESSION" ]] && [[ "$STATE_SESSION" != "$HOOK_SESSION" ]]; then
     exit 0
 fi
 
-# ── 4. 数值校验 ──
+# ── 4. 数值校验（缺失时自动修复，不删除文件） ──
 
 if [[ ! "$ITERATION" =~ ^[0-9]+$ ]]; then
-    echo "⚠️  autopilot: 状态文件损坏 (iteration: '$ITERATION')" >&2
-    rm "$STATE_FILE"
-    exit 0
+    echo "⚠️  autopilot: iteration 字段缺失或无效 ('$ITERATION')，自动修复为 1" >&2
+    ITERATION=1
+    # 尝试修复状态文件：如果字段存在但值非法则修正，如果字段不存在则注入
+    if grep -q "^iteration:" "$STATE_FILE" 2>/dev/null; then
+        set_field "iteration" "1"
+    else
+        sed -i.bak '/^phase:/a\
+iteration: 1' "$STATE_FILE" && rm -f "${STATE_FILE}.bak"
+    fi
 fi
 
 if [[ ! "$MAX_ITERATIONS" =~ ^[0-9]+$ ]]; then
-    echo "⚠️  autopilot: 状态文件损坏 (max_iterations: '$MAX_ITERATIONS')" >&2
-    rm "$STATE_FILE"
-    exit 0
+    echo "⚠️  autopilot: max_iterations 字段缺失或无效 ('$MAX_ITERATIONS')，自动修复为 30" >&2
+    MAX_ITERATIONS=30
+    if grep -q "^max_iterations:" "$STATE_FILE" 2>/dev/null; then
+        set_field "max_iterations" "30"
+    else
+        sed -i.bak '/^iteration:/a\
+max_iterations: 30' "$STATE_FILE" && rm -f "${STATE_FILE}.bak"
+    fi
 fi
 
 # ── 5. phase=done → 完成清理 ──
