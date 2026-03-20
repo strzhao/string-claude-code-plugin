@@ -7,7 +7,8 @@ set -euo pipefail
 RAW_NAME=$(node -e "const d=require('fs').readFileSync(0,'utf8');process.stdout.write(JSON.parse(d).name)")
 
 # Sanitize: 空格/特殊字符替换为连字符，确保 git 分支名合法
-NAME=$(echo "$RAW_NAME" | sed 's/[[:space:]]/-/g; s/[^a-zA-Z0-9\u4e00-\u9fff._/-]/-/g; s/--*/-/g; s/^-//; s/-$//')
+# 使用 perl 替代 sed 以支持 Unicode 字符范围（macOS BSD sed 不支持 \u 转义）
+NAME=$(echo "$RAW_NAME" | perl -CSD -pe 's/\s/-/g; s/[^a-zA-Z0-9\x{4e00}-\x{9fff}._\/-]/-/g; s/-{2,}/-/g; s/^-//; s/-$//')
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 WORKTREE_PATH="$REPO_ROOT/.claude/worktrees/$NAME"
