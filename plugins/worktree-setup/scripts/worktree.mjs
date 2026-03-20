@@ -2,7 +2,7 @@
 // worktree.mjs — Claude Code worktree-setup plugin
 // Unified entry: create / remove / repair
 import { execSync, execFileSync } from 'child_process';
-import { readFileSync, existsSync, mkdirSync, symlinkSync, lstatSync, unlinkSync, readdirSync, writeFileSync } from 'fs';
+import { readFileSync, existsSync, mkdirSync, symlinkSync, lstatSync, unlinkSync, readdirSync, writeFileSync, realpathSync } from 'fs';
 import { join, basename, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -32,8 +32,23 @@ function readStdin() {
 }
 
 function repoRoot(cwd) {
+  // For worktrees, --show-toplevel returns the worktree root, not the main repo.
+  // Use GIT_COMMON_DIR-based approach to always find the main repo root.
   try {
-    return git('-C', cwd, 'rev-parse', '--show-toplevel');
+    const toplevel = git('-C', cwd, 'rev-parse', '--show-toplevel');
+    // Check if this is a linked worktree by looking at .git (file, not dir)
+    const dotGit = join(toplevel, '.git');
+    try {
+      const stat = lstatSync(dotGit);
+      if (stat.isFile()) {
+        // This is a worktree — .git is a file pointing to the main repo's .git/worktrees/<name>
+        // Use --git-common-dir to find the real repo's .git, then go up one level
+        const commonDir = git('-C', cwd, 'rev-parse', '--git-common-dir');
+        const resolved = resolve(toplevel, commonDir);
+        return dirname(resolved); // .git dir → parent = repo root
+      }
+    } catch { /* .git doesn't exist or can't stat — just return toplevel */ }
+    return toplevel;
   } catch {
     return git('rev-parse', '--show-toplevel');
   }
@@ -151,35 +166,51 @@ function repair(worktreePath) {
 // ─── CREATE ───
 function create() {
   const input = readStdin();
+  log(`→ stdin: ${JSON.stringify({ name: input.name, cwd: input.cwd, hook_event_name: input.hook_event_name })}`);
   if (!input.name) throw new Error('stdin JSON 缺少 name 字段');
   const name = sanitizeName(input.name);
   if (!name) throw new Error(`名称清洗后为空: ${JSON.stringify(input.name)}`);
-  const root = repoRoot(process.cwd());
+
+  // Use cwd from stdin (Claude Code passes it), fallback to process.cwd()
+  const cwd = input.cwd || process.cwd();
+  const root = repoRoot(cwd);
   const worktreePath = join(root, '.claude', 'worktrees', name);
   const branch = `worktree-${name}`;
 
-  log(`→ 创建 worktree: ${name} (分支: ${branch})`);
+  log(`→ 创建 worktree: ${name} (分支: ${branch}, root: ${root})`);
 
-  // Detect default branch from origin
-  let created = false;
-  const hasOrigin = gitSilent('remote', 'show', 'origin');
-  if (hasOrigin) {
-    const headLine = hasOrigin.split('\n').find(l => l.includes('HEAD branch:'));
-    const defaultBranch = headLine ? headLine.replace(/.*HEAD branch:\s*/, '').trim() : '';
-    if (defaultBranch) {
-      try {
-        git('fetch', 'origin', defaultBranch);
-        git('worktree', 'add', worktreePath, '-b', branch, `origin/${defaultBranch}`);
-        created = true;
-      } catch (e) {
-        log(`   ⚠ 基于 origin/${defaultBranch} 创建失败: ${e.message}`);
+  // If worktree path already exists, skip creation and just repair
+  if (existsSync(worktreePath)) {
+    log(`→ worktree 路径已存在，跳过创建，直接修复`);
+  } else {
+    // Clean up stale branch if it exists (from previous failed attempts)
+    const staleBranch = gitSilent('-C', root, 'rev-parse', '--verify', `refs/heads/${branch}`);
+    if (staleBranch) {
+      log(`→ 清理残留分支: ${branch}`);
+      gitSilent('-C', root, 'branch', '-D', branch);
+    }
+
+    // Detect default branch from origin
+    let created = false;
+    const hasOrigin = gitSilent('-C', root, 'remote', 'show', 'origin');
+    if (hasOrigin) {
+      const headLine = hasOrigin.split('\n').find(l => l.includes('HEAD branch:'));
+      const defaultBranch = headLine ? headLine.replace(/.*HEAD branch:\s*/, '').trim() : '';
+      if (defaultBranch) {
+        try {
+          git('-C', root, 'fetch', 'origin', defaultBranch);
+          git('-C', root, 'worktree', 'add', worktreePath, '-b', branch, `origin/${defaultBranch}`);
+          created = true;
+        } catch (e) {
+          log(`   ⚠ 基于 origin/${defaultBranch} 创建失败: ${e.message}`);
+        }
       }
     }
-  }
 
-  if (!created) {
-    log('→ 无 origin remote 或无法检测默认分支，基于当前 HEAD 创建');
-    git('worktree', 'add', worktreePath, '-b', branch, 'HEAD');
+    if (!created) {
+      log('→ 无 origin remote 或无法检测默认分支，基于当前 HEAD 创建');
+      git('-C', root, 'worktree', 'add', worktreePath, '-b', branch, 'HEAD');
+    }
   }
 
   // Repair: symlinks + deps
@@ -204,7 +235,8 @@ function remove() {
   if (!worktreePath) throw new Error('stdin JSON 缺少 worktree_path 字段');
   log(`→ 清理 worktree: ${worktreePath}`);
 
-  const root = repoRoot(process.cwd());
+  const cwd = input.cwd || process.cwd();
+  const root = repoRoot(cwd);
   const linksFile = join(root, '.claude', 'worktree-links');
   const links = parseLinksFile(linksFile);
 
@@ -256,8 +288,10 @@ function remove() {
 }
 
 // ─── Main (only when run directly, not when imported) ───
-const __filename = fileURLToPath(import.meta.url);
-if (process.argv[1] && resolve(process.argv[1]) === __filename) {
+// Use realpathSync to resolve symlinks — .claude/plugins/ may be a symlink to .claude/.shared-plugins/
+const __filename = realpathSync(fileURLToPath(import.meta.url));
+const argv1Real = process.argv[1] ? realpathSync(resolve(process.argv[1])) : '';
+if (argv1Real === __filename) {
   const subcmd = process.argv[2];
 
   try {

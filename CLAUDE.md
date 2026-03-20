@@ -259,7 +259,7 @@
 
 ---
 
-### 6. worktree-setup (v2.0.0)
+### 6. worktree-setup (v2.1.0)
 **类型**: Hook 插件
 **功能**: Git Worktree 自动初始化工具
 
@@ -281,6 +281,14 @@
 ## 更新日志
 
 ### 2026-03-20
+- worktree-setup 升级至 v2.1.0：修复 Agent isolation worktree 创建失败（"no successful output"）
+  - 根因1：`repoRoot()` 在 worktree 内调用时返回 worktree 路径而非主仓库根，导致嵌套 worktree
+  - 根因2：`create()` 使用 `process.cwd()` 而非 stdin 传入的 `cwd`，Agent 子进程 cwd 可能不在 git 仓库内
+  - 根因3：分支名冲突（上次失败残留）直接 exit 1，无恢复逻辑
+  - repoRoot(): 新增 `--git-common-dir` 检测，worktree 内始终解析到主仓库根
+  - create(): 使用 `input.cwd` 代替 `process.cwd()`，worktree 路径已存在时跳过创建直接修复，残留分支自动清理
+  - remove(): 同步使用 `input.cwd`
+  - git 命令全部加 `-C root` 参数，消除 cwd 依赖
 - autopilot 升级至 v2.7.2：修复空 session_id 状态文件劫持新会话的 bug
   - 根因：setup.sh 在 CLAUDE_CODE_SESSION_ID 环境变量缺失时写入空 session_id，stop-hook 的 session 隔离检查在空值时被完全跳过
   - stop-hook.sh: 空 session_id 视为残留文件直接放行，非空时严格匹配
