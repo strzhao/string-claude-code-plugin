@@ -259,7 +259,7 @@
 
 ---
 
-### 6. worktree-setup (v1.0.0)
+### 6. worktree-setup (v2.0.0)
 **类型**: Hook 插件
 **功能**: Git Worktree 自动初始化工具
 
@@ -281,6 +281,16 @@
 ## 更新日志
 
 ### 2026-03-20
+- worktree-setup 升级至 v2.0.0：Shell 脚本全面重写为 Node.js，消除跨平台兼容性问题
+  - 三个 .sh 脚本（worktree-create/remove/repair）合并为统一入口 `scripts/worktree.mjs`
+  - 名称清洗改用 JS 原生 regex（天然支持 Unicode），彻底解决 macOS sed/perl 反复报错
+  - git 命令改用 `execFileSync` 数组参数，消除命令注入风险
+  - 新增 22 个验收测试（node:test），覆盖名称清洗、端口计算、文件解析、子命令路由
+  - hooks.json command 改为 `node ... worktree.mjs create/remove`
+- autopilot 升级至 v2.6.2：修复状态文件被 stop-hook 误删的严重 bug
+  - 根因：AI 用 Write 重写状态文件时丢失 `iteration`/`max_iterations` 字段，stop-hook 数值校验失败后直接 `rm` 删除
+  - stop-hook.sh: 数值校验从"删除文件"改为"自动修复缺失字段"（防御性编程）
+  - SKILL.md: frontmatter 更新规范中明确列出所有必需字段，禁止用 Write 重写整个状态文件
 - autopilot 升级至 v2.6.1：修复 worktree 场景下状态文件找不到的问题
   - lib.sh: PROJECT_ROOT/STATE_FILE 改为延迟初始化函数 `init_paths()`，支持传入 cwd 参数
   - stop-hook.sh: 从 stdin JSON 提取 `cwd` 字段后再初始化路径，解决 hook CWD 不可靠的时序问题

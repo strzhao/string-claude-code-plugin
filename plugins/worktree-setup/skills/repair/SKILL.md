@@ -13,7 +13,7 @@ allowed-tools: Bash
 2. 运行修复脚本：
 
 ```bash
-bash "${CLAUDE_SKILL_DIR}/../../scripts/worktree-repair.sh" "$(pwd)"
+node "${CLAUDE_SKILL_DIR}/../../scripts/worktree.mjs" repair "$(pwd)"
 ```
 
 3. 报告结果：哪些文件被链接、哪些已存在、依赖是否重装

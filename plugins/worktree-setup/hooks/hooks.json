@@ -5,7 +5,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/worktree-create.sh\"",
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/worktree.mjs\" create",
                         "timeout": 300,
                         "statusMessage": "初始化 worktree（npm install 中...）"
                     }
@@ -17,7 +17,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/worktree-remove.sh\"",
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/worktree.mjs\" remove",
                         "timeout": 60,
                         "statusMessage": "清理 worktree..."
                     }
