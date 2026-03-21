@@ -159,36 +159,7 @@ gh api repos/{owner}/{repo}/environments/npm -X PUT --input - <<< '{}'
    gh run watch {run-id}
    ```
 
-## 常见问题排查
+## 参考文档
 
-### E404 Not Found
-
-```
-npm error 404 Not Found - PUT https://registry.npmjs.org/@scope%2fpackage
-```
-
-可能原因：
-1. npm 版本太低（Node 22 以下），OIDC token 无法被识别 → 升级到 Node 24
-2. Trusted Publisher 配置不匹配（owner/repo/workflow/environment 任一不对）→ 逐项检查
-3. 包从未手动发布过 → 先本地 `npm publish` 一次
-
-### E422 Unprocessable Entity (provenance)
-
-```
-Error verifying sigstore provenance bundle: Unsupported GitHub Actions source repository visibility: "private"
-```
-
-→ Private 仓库去掉 `--provenance` flag。
-
-### npm warn Unknown user config "always-auth"
-
-这是 npm 11+ 的警告，不影响发布，可忽略。
-
-### 首次发布
-
-Trusted Publishing 无法用于首次发布（包不存在时无法配置）。首次发布流程：
-1. 确保本地 npm 已登录：`npm whoami`，未登录则 `npm adduser`
-2. 确认 registry：`npm config get registry`（应为 `https://registry.npmjs.org`）
-3. Build 项目：`npm run build`
-4. 手动发布：`npm publish --access public`
-5. 发布成功后再去 npmjs.com 配置 Trusted Publisher
+- **排障与安全最佳实践**: See [references/troubleshooting.md](references/troubleshooting.md) — E404/E422 排查、2FA、Token 管理、Provenance、供应链安全
+- **发布自动化工具选型**: See [references/release-automation.md](references/release-automation.md) — Changesets / semantic-release / release-please 配置与对比

@@ -278,9 +278,35 @@
 
 ---
 
+### 7. npm-toolkit (v2.0.0)
+**类型**: Skill 插件
+**功能**: npm 发布全链路 + GitHub Actions CI/CD 配置工具包
+
+**包含 Skill**:
+- `npm-publish`：OIDC Trusted Publishing 自动发布（无需 npm token），5 步配置流程，Public/Private 双模板
+- `github-actions-setup`：GitHub Actions 工作流配置，6 种触发器 + 4 套项目模板 + Environment/Secrets/Permissions
+
+**核心能力**:
+- OIDC Trusted Publishing 自动发布，彻底消除 token 管理负担
+- 安全最佳实践：2FA、Granular Token、Provenance 签名、供应链安全审计
+- 发布自动化工具选型：Changesets（Monorepo）/ semantic-release（全自动）/ release-please（受控自动）
+- GitHub Actions 进阶模式：复合 Action、可复用 Workflow、缓存策略、动态 Matrix、Artifact 管理
+- Progressive Disclosure 结构：SKILL.md 精简核心流程，references/ 提供深度参考
+
+**使用方式**:
+安装插件后，发送 "配置 npm 自动发布" 触发 npm-publish，发送 "配置 GitHub Actions" 触发 github-actions-setup。
+
+---
+
 ## 更新日志
 
 ### 2026-03-21
+- npm-toolkit 升级至 v2.0.0：全面升级为 Progressive Disclosure 结构 + 安全/发布自动化/进阶 Actions 参考文档
+  - SKILL.md 重构为精简核心流程 + references/ 外置详细参考（npm-publish 195→165 行，github-actions-setup 311→196 行）
+  - 新增 troubleshooting.md：E404/E422 排障 + 安全最佳实践（2FA/Token/Provenance/供应链）
+  - 新增 release-automation.md：Changesets/semantic-release/release-please 选型与 Monorepo 发布
+  - 新增 advanced-patterns.md：复合 Action、可复用 Workflow、缓存策略、Matrix 进阶、Artifact 管理
+  - 完善 README.md（23→78 行）、plugin.json keywords 增强、CLAUDE.md 新增条目
 - autopilot 升级至 v2.11.0：知识工程从平面存储升级为分层知识系统（Progressive Disclosure）
   - 动机：研究 AGENTS.md、CLAUDE.md、Anthropic Context Engineering 等业界最佳实践，发现当前知识工程缺少索引层、领域分区和智能检索
   - 新增三层 Progressive Disclosure 目录结构：index.md（索引层）→ decisions.md/patterns.md（全局层）→ domains/（领域分区层）

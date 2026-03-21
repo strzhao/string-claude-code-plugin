@@ -32,61 +32,39 @@ jobs:
 
 ## 触发器配置
 
-### Push 触发
-
 ```yaml
+# Push（支持 branches/paths/tags 过滤）
 on:
   push:
-    branches: [main, develop]        # 指定分支
-    paths:                            # 路径过滤（可选）
-      - 'src/**'
-      - 'package.json'
-    tags:
-      - 'v*'                         # tag 匹配
-```
+    branches: [main, develop]
+    paths: ['src/**', 'package.json']   # 路径过滤（可选）
+    tags: ['v*']                        # tag 匹配
 
-### Pull Request 触发
-
-```yaml
+# Pull Request
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]  # 默认就是这三个
-```
 
-### Release 触发
-
-```yaml
+# Release
 on:
   release:
-    types: [published]               # 发布 release 时触发
-```
+    types: [published]
 
-### 定时触发
-
-```yaml
+# 定时（cron 格式，UTC 时区）
 on:
   schedule:
-    - cron: '0 2 * * 1-5'           # 工作日 UTC 2:00（北京时间 10:00）
-```
+    - cron: '0 2 * * 1-5'              # 工作日 UTC 2:00
 
-### 手动触发
-
-```yaml
+# 手动触发（带参数）
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: 'Deploy environment'
-        required: true
-        default: 'staging'
         type: choice
         options: [staging, production]
-```
 
-### 组合触发
-
-```yaml
+# 组合触发
 on:
   push:
     branches: [main]
@@ -127,34 +105,6 @@ jobs:
       - run: npm test
 ```
 
-### Python 项目 CI
-
-```yaml
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.11', '3.12', '3.13']
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - run: pip install -e ".[dev]"
-      - run: pytest
-```
-
 ### Docker 构建推送
 
 ```yaml
@@ -185,22 +135,14 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
 ```
 
-### 部署到 Vercel / Cloudflare
+## Environment、Secrets 与 Permissions
 
-对于前端项目，通常直接在 Vercel / Cloudflare 平台配置 Git 集成即可，无需手写 workflow。仅在需要自定义构建步骤或多环境部署时才需要 workflow。
-
-## Environment 与 Secrets
-
-### 创建 Environment
+### Environment 与 Secret 管理
 
 ```bash
-# 通过 gh CLI
+# 创建 environment
 gh api repos/{owner}/{repo}/environments/{env-name} -X PUT --input - <<< '{}'
-```
 
-### 添加 Secret
-
-```bash
 # 仓库级 secret
 gh secret set SECRET_NAME --body "value"
 
@@ -208,103 +150,47 @@ gh secret set SECRET_NAME --body "value"
 gh secret set SECRET_NAME --env production --body "value"
 ```
 
-### 在 workflow 中使用
+在 workflow 中引用：`environment: production` + `${{ secrets.DEPLOY_TOKEN }}`
 
-```yaml
-jobs:
-  deploy:
-    environment: production          # 引用 environment
-    steps:
-      - run: deploy --token ${{ secrets.DEPLOY_TOKEN }}
-```
+### Permissions
 
-## Permissions 配置
-
-GitHub Actions 默认权限较小，某些操作需要显式声明：
+GitHub Actions 默认权限较小，按需显式声明：
 
 ```yaml
 permissions:
   contents: read          # 读取仓库代码（默认）
-  contents: write         # 推送代码、创建 tag
   id-token: write         # OIDC token（npm trusted publishing 等）
   packages: write         # 推送 GitHub Container Registry
   pull-requests: write    # 评论 PR
-  issues: write           # 操作 issue
 ```
 
 最小权限原则：只声明需要的权限。
 
 ## 实用技巧
 
-### 缓存依赖
-
 ```yaml
-- uses: actions/setup-node@v4
-  with:
-    node-version: 24
-    cache: 'npm'          # 自动缓存 node_modules
-```
-
-### 条件执行
-
-```yaml
+# 条件执行
 - run: npm run deploy
-  if: github.ref == 'refs/heads/main'   # 仅主分支
-```
+  if: github.ref == 'refs/heads/main'
 
-### 并行任务
-
-```yaml
+# 并行与依赖
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps: [...]
-
-  test:
-    runs-on: ubuntu-latest
-    steps: [...]
-
+  lint: ...
+  test: ...
   build:
-    needs: [lint, test]                 # 等 lint 和 test 都过了再 build
-    runs-on: ubuntu-latest
-    steps: [...]
-```
-
-### 复用 workflow
-
-```yaml
-# .github/workflows/reusable.yml
-on:
-  workflow_call:
-    inputs:
-      node-version:
-        type: string
-        default: '24'
-
-# 调用方
-jobs:
-  ci:
-    uses: ./.github/workflows/reusable.yml
-    with:
-      node-version: '24'
+    needs: [lint, test]    # 等 lint 和 test 都过了再 build
 ```
 
 ## 排查 Workflow 失败
 
 ```bash
-# 查看最近的 run
-gh run list --limit 5
-
-# 查看某次 run 的失败日志
-gh run view {run-id} --log-failed
-
-# 重新运行失败的 job
-gh run rerun {run-id} --failed
+gh run list --limit 5                    # 查看最近的 run
+gh run view {run-id} --log-failed        # 查看失败日志
+gh run rerun {run-id} --failed           # 重新运行失败 job
 ```
 
-常见失败原因：
-1. **Node.js 版本过低** — 升级到需要的版本
-2. **权限不足** — 检查 `permissions` 配置
-3. **Secret 未配置** — 检查 Settings → Secrets
-4. **依赖安装失败** — 检查 package-lock.json 是否提交
-5. **actions/checkout/setup-node 版本过旧** — 升级到 v4/v5
+常见原因：Node 版本过低、permissions 不足、Secret 未配置、package-lock.json 未提交、actions 版本过旧。
+
+## 参考文档
+
+- **进阶模式**: See [references/advanced-patterns.md](references/advanced-patterns.md) — 复合 Action、可复用 Workflow、缓存策略、Matrix 进阶、Artifact 管理
