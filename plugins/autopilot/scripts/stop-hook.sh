@@ -42,16 +42,24 @@ ITERATION=$(get_field "iteration" || true)
 MAX_ITERATIONS=$(get_field "max_iterations" || true)
 STATE_SESSION=$(get_field "session_id" || true)
 
-# ── 3. Session 隔离 ──
+# ── 3. Session 隔离（Ralph 兼容 + 首次认领） ──
 
 HOOK_SESSION=$(echo "$HOOK_INPUT" | jq -r '.session_id // ""' 2>/dev/null || true)
 
-# session_id 为空说明状态文件异常（setup 时环境变量缺失），疑似残留文件，不应劫持新会话
+# Guard 1: 空 STATE_SESSION → 首次认领
+# setup.sh 在 CLAUDE_CODE_SESSION_ID 不可用时写入空值（与 ralph 一致）。
+# 首次 Stop hook 触发时，用真实 session_id 认领状态文件，建立隔离。
 if [[ -z "$STATE_SESSION" ]]; then
-    echo "⚠️  autopilot: 状态文件 session_id 为空，疑似残留文件，跳过。使用 /autopilot cancel 清理或 /autopilot <目标> 重新启动。" >&2
-    exit 0
+    if [[ -n "$HOOK_SESSION" ]]; then
+        set_field "session_id" "$HOOK_SESSION"
+        STATE_SESSION="$HOOK_SESSION"
+        # 继续执行，不 exit — session 已认领
+    fi
+    # HOOK_SESSION 也为空时继续执行（与 ralph 的空值跳过隔离一致）
 fi
-if [[ "$STATE_SESSION" != "$HOOK_SESSION" ]]; then
+
+# Guard 2: 非空且不匹配 → 不同会话，放行
+if [[ -n "$STATE_SESSION" ]] && [[ "$STATE_SESSION" != "$HOOK_SESSION" ]]; then
     exit 0
 fi
 

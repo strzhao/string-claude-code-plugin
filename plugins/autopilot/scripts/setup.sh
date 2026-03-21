@@ -242,11 +242,9 @@ fi
 # 创建状态文件
 mkdir -p "$PROJECT_ROOT/.claude"
 
-# session_id 兜底：环境变量不可用时生成随机 ID，确保 stop-hook 的 session 隔离始终生效
+# session_id：与 ralph 一致，直接使用环境变量（可能为空）。
+# 空值时由 stop-hook 首次触发时认领真实 session_id，建立隔离。
 SESSION_ID="${CLAUDE_CODE_SESSION_ID:-}"
-if [[ -z "$SESSION_ID" ]]; then
-    SESSION_ID="autopilot-$(date +%s)-$$"
-fi
 
 # 检查知识库是否存在
 KNOWLEDGE_HINT=""
