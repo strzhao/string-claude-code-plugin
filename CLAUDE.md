@@ -48,7 +48,7 @@
 
 ---
 
-### 3. autopilot (v2.10.0)
+### 3. autopilot (v2.11.0)
 **类型**: Skill + Hook 插件
 **功能**: AI 自动驾驶工程套件（全流程闭环 + 智能提交 + 工程诊断）
 
@@ -67,7 +67,7 @@
 - 两阶段代码审查：设计符合性 + 代码质量，并行 Sub-Agent 执行（置信度 ≥80 过滤）
 - 防合理化表格：对抗 AI 跳过测试/修改红队测试的借口
 - 铁律：不允许修改红队测试来通过 QA，成功需要证据，假设需要证据
-- 知识工程：design 阶段消费历史决策和模式提升设计质量，merge 阶段反馈驱动提取知识持续积累（.claude/knowledge/）
+- 知识工程：索引驱动 + 领域分区 + 智能检索的分层知识系统（.claude/knowledge/），design 阶段两阶段检索（索引扫描 → 按需加载），merge 阶段自动 tags + index 同步 + 领域分区
 - 智能提交：三阶段并行执行模型，React 优化、Bugfix 双模式验证（自动化测试 + 运行时验证）、代码测验、CLAUDE.md 更新、版本升级、ai-todo 同步
 - 生成高质量中文提交信息（业务描述 + 技术说明）
 - 工程诊断：10 维度加权评分（测试/类型/lint/构建/CI/结构/文档/Git/依赖/AI就绪度），S-F 等级，autopilot 兼容性矩阵，`--fix` 自动修复
@@ -281,6 +281,15 @@
 ## 更新日志
 
 ### 2026-03-21
+- autopilot 升级至 v2.11.0：知识工程从平面存储升级为分层知识系统（Progressive Disclosure）
+  - 动机：研究 AGENTS.md、CLAUDE.md、Anthropic Context Engineering 等业界最佳实践，发现当前知识工程缺少索引层、领域分区和智能检索
+  - 新增三层 Progressive Disclosure 目录结构：index.md（索引层）→ decisions.md/patterns.md（全局层）→ domains/（领域分区层）
+  - 新增 index.md 索引文件：路由层，每条目只记标题 + tags + 位置，Design 阶段 always loaded
+  - 条目格式增强：新增 `<!-- tags: tag1, tag2 -->` HTML comment 标签，支持关键词匹配检索
+  - 消费规则升级为两阶段检索：Phase 1 索引扫描（≤5s）→ Phase 2 按需加载（≤10s，最多 3 文件）
+  - 无 index.md 时 fallback 到全量加载（100% 向后兼容）
+  - 提取规则增强：自动生成 tags、同步 index.md、支持领域分区写入 domains/
+  - 全局文件 >100 行时建议将领域条目迁移到 domains/（需用户确认）
 - autopilot 升级至 v2.10.0：QA 执行效率优化（选择性重跑 + 场景并行 + 失败快速路径）
   - 新增选择性 Tier 重跑：auto-fix 修复后仅重跑失败 Tier + Tier 1.5，而非全量 QA，预计节省 30-50% 重试时间
   - 新增场景独立性声明：设计阶段验证方案支持 `[独立]` 标记，标记场景 Wave 1.5 可并行执行
