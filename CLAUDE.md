@@ -259,7 +259,7 @@
 
 ---
 
-### 6. worktree-setup (v2.1.0)
+### 6. worktree-setup (v2.2.0)
 **类型**: Hook 插件
 **功能**: Git Worktree 自动初始化工具
 
@@ -267,6 +267,7 @@
 - `WorktreeCreate` hook：`claude -w <name>` 后自动完成 worktree 初始化
 - 按项目 `.claude/worktree-links` 创建符号链接（`.env.local`、`.mcp.json` 等）
 - 无配置时自动扫描 `.env*` 文件（新项目零配置可用）
+- `.claude/knowledge/` 自动链接至主仓库（知识库跨 worktree 共享）
 - 确定性端口分配：hash(branch_name) → 4001-4999，避免多 worktree 端口冲突
 - 自动识别 npm/yarn/pnpm 并安装依赖（含 `prisma generate`）
 - `WorktreeRemove` hook：退出时自动清理符号链接和分支
@@ -301,6 +302,12 @@
 ## 更新日志
 
 ### 2026-03-22
+- worktree-setup 升级至 v2.2.0：新增 `.claude/knowledge/` 自动链接，知识库跨 worktree 共享
+  - 动机：`.claude/knowledge/` 是 git-tracked 文件，worktree 创建时 git checkout 生成独立副本，导致知识漂移和孤岛
+  - repair() 自动将 worktree 的 `.claude/knowledge/` 替换为指向主仓库的符号链接
+  - remove() 退出时自动清理 knowledge 符号链接
+  - 无需配置 worktree-links，knowledge 目录作为 always-link 行为自动处理
+  - autopilot 知识提取适配：merge 阶段检测符号链接后在主仓库上下文执行 git 操作
 - autopilot 升级至 v2.12.0：implement 阶段新增领域 Skill 委托机制
   - 动机：little-bee 项目用 autopilot 批量添加汉字时，蓝队 Agent 没有调用已有的 add-hanzi skill 而从零实现，导致 audio-index 覆盖、Blob store 上传错误、音频生成 3 轮浪费等问题
   - design 阶段：设计文档模板新增 `## 领域 Skill 委托（可选）` 字段，声明委托 Skill 名称、范围、输入
