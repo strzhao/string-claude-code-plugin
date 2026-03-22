@@ -36,16 +36,6 @@
             }
         },
         {
-            "name": "plugin-sync",
-            "source": "./plugins/plugin-sync",
-            "description": "Claude Code 跨模型插件同步工具。解决 cc switch 切换模型后插件丢失问题，实现所有模型共享插件配置",
-            "version": "1.0.0",
-            "author": {
-                "name": "stringzhao",
-                "email": "zhaoguixiong@corp.netease.com"
-            }
-        },
-        {
             "name": "writer-skill",
             "source": "./plugins/writer-skill",
             "description": "写作技能包。包含博客向、通用向两种写作风格，让 AI 写出有个人味道的文章",

@@ -81,23 +81,6 @@
 
 ---
 
-### 4. plugin-sync (v1.0.0)
-**类型**: Hook 插件
-**功能**: 跨模型插件同步工具
-
-**核心能力**:
-- 解决 `cc switch` 切换模型后插件丢失问题
-- 使用软链接实现所有模型共享插件目录
-- 安装插件时自动同步到共享目录
-- 切换模型时自动从共享目录恢复
-
-**使用方法**:
-1. 安装 plugin-sync 插件
-2. 运行初始化脚本：`./plugins/plugin-sync/setup.sh`
-3. 之后所有模型的插件自动保持同步
-
----
-
 ---
 
 ## 项目结构
@@ -123,10 +106,6 @@
 │   │   ├── hooks/
 │   │   ├── scripts/
 │   │   └── skills/
-│   ├── plugin-sync/              # 跨模型插件同步工具
-│       ├── .claude-plugin/
-│       ├── hooks/
-│       └── assets/
 │   └── writer-skill/             # 写作技能包
 │       ├── .claude-plugin/
 │       └── skills/
@@ -442,7 +421,6 @@
 - writer-skill 升级至 v1.6.0：新增 writer-tech-skill，专注 RFC/Design Doc 工程规范型文档写作
 
 ### 2026-02-08
-- 添加 plugin-sync 插件，解决跨模型插件同步问题
 - 添加 task-notifier 插件
 - 更新文档结构
 
